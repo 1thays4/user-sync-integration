@@ -38,7 +38,9 @@ async function initDatabase() {
       updated_at TEXT DEFAULT (datetime('now'))
     )
   `);
-  persistDatabase();
+  if (!dbData) {
+    persistDatabase();
+  }
 
   // Retorna um objeto wrapper com os métodos que o processor espera
   return {
