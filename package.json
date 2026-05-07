@@ -1,0 +1,12 @@
+﻿{
+  "name": "user-sync-integration",
+  "version": "1.0.0",
+  "description": "Sincronização de usuários com RandomUser API e SQLite (sql.js)",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "sql.js": "^1.10.3"
+  }
+}
