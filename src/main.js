@@ -24,7 +24,7 @@ async function main() {
     estatisticas.totalBuscado = usuarios.length;
     console.log(`${estatisticas.totalBuscado} usuários recebidos.`);
 
-    console.log('Processando dados...');
+    console.log('Processando e persistindo dados...');
     for (const usuario of usuarios) {
       await processarUsuario(usuario, banco, estatisticas);
     }

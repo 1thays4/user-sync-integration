@@ -36,8 +36,14 @@ function gerarRelatorio(estatisticas, tempoInicio) {
   const caminhoArquivo = path.join(REPORTS_DIR, nomeArquivo);
   fs.writeFileSync(caminhoArquivo, JSON.stringify(relatorio, null, 2), 'utf-8');
 
-  console.log(`Relatório gerado: ${caminhoArquivo}`);
-  console.log(`Total: ${relatorio.resumo.total_buscado}, Adicionados: ${relatorio.resumo.adicionados}, Atualizados: ${relatorio.resumo.atualizados}, Ignorados: ${relatorio.resumo.ignorados_menores}, Erros: ${relatorio.resumo.erros}`);
+  console.log(`Relatório gerado: relatorios/${nomeArquivo}`);
+  console.log('Resumo:');
+  console.log(`- Total recebido: ${relatorio.resumo.total_buscado}`);
+  console.log(`- Persistidos: ${relatorio.resumo.processados_persistidos}`);
+  console.log(`- Adicionados: ${relatorio.resumo.adicionados}`);
+  console.log(`- Atualizados: ${relatorio.resumo.atualizados}`);
+  console.log(`- Ignorados (<18): ${relatorio.resumo.ignorados_menores}`);
+  console.log(`- Erros: ${relatorio.resumo.erros}`);
 }
 
 module.exports = { gerarRelatorio };

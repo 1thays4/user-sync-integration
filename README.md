@@ -58,7 +58,7 @@ Buscando usuários da API RandomUser...
 150 usuários recebidos.
 Processando e persistindo dados...
 
-Relatório gerado: relatorios/report_2026-05-07T00-59-30-856Z.json
+Relatório gerado: relatorios/relatorio_2025-01-15T14-35-22-123Z.json
 Resumo:
 - Total recebido: 150
 - Persistidos: 150
