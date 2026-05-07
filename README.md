@@ -6,7 +6,7 @@ Aplicação Node.js que consome a API [RandomUser](https://randomuser.me/), pers
 
 - Node.js 18+ (fetch nativo)
 - Consumo da API com 150 usuários
-- Persistência em SQLite
+- Persistência em SQLite (via `sql.js`, 100% JavaScript, sem compilação nativa)
 - Campo `email` como chave única (UPSERT: adiciona ou atualiza)
 - Filtro por idade >= 18 anos (baseado no campo `dob.age` da API)
 - Relatório em JSON contendo:
@@ -18,8 +18,8 @@ Aplicação Node.js que consome a API [RandomUser](https://randomuser.me/), pers
 
 1. **Clone o repositório**
    ```bash
-   git clone <seu-repositorio>
-   cd integration-challenge
+   git clone https://github.com/seu-usuario/user-sync-integration
+   cd user-sync-integration
    ```
 
 2. **Instale as dependências**
@@ -32,34 +32,49 @@ Aplicação Node.js que consome a API [RandomUser](https://randomuser.me/), pers
    npm start
    ```
 
+**Nota para ambiente Windows com firewall corporativo:**
+Se ocorrer erro de certificado SSL (UNABLE_TO_VERIFY_LEAF_SIGNATURE), execute antes:
+```powershell
+$env:NODE_TLS_REJECT_UNAUTHORIZED=0
+npm start
+```
+(Isso é necessário apenas em redes que usam certificados autoassinados ou proxy interceptador; em ambientes normais não é preciso.)
+
 Na primeira execução, o banco de dados (dados/integration.db) e a tabela users serão criados automaticamente. O relatório será salvo na pasta relatorios/ com timestamp.
 
 ## Estrutura do código
 
 - `src/api.js` – requisição à API RandomUser.
-- `src/db.js` – inicialização do SQLite e operações CRUD.
+- `src/db.js` – inicialização do SQLite (via sql.js) e operações CRUD.
 - `src/processor.js` – lógica de filtro etário e upsert (verifica existência antes de inserir/atualizar).
 - `src/report.js` – geração do arquivo JSON de relatório.
 - `src/main.js` – orquestração principal.
 
 ## Exemplo de saída (console)
 
-```
+```text
 Iniciando integração...
-Buscando usuários da API...
+Buscando usuários da API RandomUser...
 150 usuários recebidos.
-Processando dados...
-Relatório gerado: relatorios/relatorio_2025-01-15T14-35-22-123Z.json
-Total: 150, Adicionados: 87, Atualizados: 45, Ignorados: 17, Erros: 1
+Processando e persistindo dados...
+
+Relatório gerado: relatorios/report_2026-05-07T00-59-30-856Z.json
+Resumo:
+- Total recebido: 150
+- Persistidos: 150
+- Adicionados: 150
+- Atualizados: 0
+- Ignorados (<18): 0
+- Erros: 0
 Integração finalizada.
 ```
 
 ## Decisões técnicas
 
-- **SQLite** – banco local simples, sem necessidade de configuração adicional.
-- **Controle de adicionado/atualizado** – consulta prévia por email para distinguir operação e acumular estatísticas corretas.
-- **Tratamento de erros** – falhas na API, no banco ou dados inconsistentes são registrados no relatório, sem interromper todo o fluxo.
-- **Idade** – utiliza o campo dob.age fornecido pela API, que já reflete a idade atual de acordo com a data de nascimento.
+- **SQLite com sql.js** – Optou-se por esta biblioteca por ser 100% JavaScript, eliminando a necessidade de compilação nativa (node-gyp) e garantindo funcionamento consistente em Windows, Linux e macOS.
+- **Controle de adicionado/atualizado** – Consulta prévia por email para distinguir operação e acumular estatísticas corretas.
+- **Tratamento de erros** – Falhas na API, no banco ou dados inconsistentes são registrados no relatório, sem interromper todo o fluxo.
+- **Idade** – Utiliza o campo dob.age fornecido pela API, que já reflete a idade atual de acordo com a data de nascimento.
 
 ## Possíveis melhorias futuras
 
